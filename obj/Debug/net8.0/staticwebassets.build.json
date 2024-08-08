@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "S+rOKG54O/OnfQWRdv93AOXeSdY5W5QLLdHbhfQoLjI=",
+  "Source": "OrderBackend",
+  "BasePath": "_content/OrderBackend",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
