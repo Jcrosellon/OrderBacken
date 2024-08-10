@@ -1,9 +1,8 @@
-// Para manejar la recuperación de pedidos basados en la identidad del cliente autenticado.
-
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OrderBackend.Data;
+using OrderBackend.Models;
 using System.Linq;
 using System.Security.Claims;
 
@@ -24,20 +23,21 @@ namespace OrderBackend.Controllers
         [HttpGet]
         public IActionResult GetOrders()
         {
-            // Obtener el NIT desde el token
-            var nit = User.FindFirstValue("nit");
-
-            if (string.IsNullOrEmpty(nit))
+            var nit = User.Claims.FirstOrDefault(c => c.Type == "nit")?.Value;
+            if (nit == null)
             {
                 return Unauthorized("NIT not found in the token.");
             }
 
-            // Filtrar los pedidos por el NIT
-            var orders = _context.Pedidos.Where(p => p.Cliente!.NIT == nit).ToList();
+            var cliente = _context.Clientes.FirstOrDefault(c => c.NIT == nit);
+            if (cliente == null)
+            {
+                return NotFound("Client not found.");
+            }
 
-            return Ok(orders);
+            var pedidos = _context.Pedidos.Where(p => p.ClienteId == cliente.Id).ToList();
+
+            return Ok(pedidos);
         }
     }
 }
-
-

@@ -142,3 +142,5 @@
 /Users/mariapaz/OrderBackend/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
 /Users/mariapaz/OrderBackend/bin/Debug/net8.0/Microsoft.Extensions.Logging.Abstractions.dll
 /Users/mariapaz/OrderBackend/bin/Debug/net8.0/Microsoft.Extensions.Options.dll
+/Users/mariapaz/OrderBackend/bin/Debug/net8.0/Newtonsoft.Json.dll
+/Users/mariapaz/OrderBackend/bin/Debug/net8.0/System.Net.WebSockets.WebSocketProtocol.dll
