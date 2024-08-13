@@ -39,5 +39,56 @@ namespace OrderBackend.Controllers
 
             return Ok(pedidos);
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateOrderStatus(
+            int id,
+            [FromBody] UpdateOrderStatusRequest request
+        )
+        {
+            // Obtener el pedido por ID
+            var pedido = await _context.Pedidos.FindAsync(id);
+
+            if (pedido == null)
+            {
+                return NotFound("Order not found.");
+            }
+
+            // Actualizar el estado del pedido basado en la solicitud
+            pedido.Status = request.Status;
+            pedido.StatusDate = DateTime.UtcNow;
+
+            // Actualizar las fechas según el estado
+            switch (request.Status)
+            {
+                case "Pedido realizado":
+                    // No se actualizan las fechas para este estado
+                    break;
+                case "Estamos preparando tu pedido":
+                    pedido.PreparingDate = DateTime.UtcNow;
+                    pedido.ShippedDate = null;
+                    pedido.DeliveredDate = null;
+                    break;
+                case "Tu pedido fue despachado":
+                    pedido.ShippedDate = DateTime.UtcNow;
+                    pedido.DeliveredDate = null;
+                    break;
+                case "Tu pedido fue entregado":
+                    pedido.DeliveredDate = DateTime.UtcNow;
+                    break;
+                default:
+                    return BadRequest("Invalid status.");
+            }
+
+            // Guardar los cambios en la base de datos
+            await _context.SaveChangesAsync();
+
+            return Ok(pedido);
+        }
+    }
+
+    public class UpdateOrderStatusRequest
+    {
+        public string? Status { get; set; }
     }
 }
