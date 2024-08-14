@@ -1,10 +1,10 @@
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using OrderBackend.Data;
 using OrderBackend.Models;
 
@@ -28,7 +28,9 @@ namespace OrderBackend.Services
                 throw new ArgumentNullException(nameof(loginRequest));
             }
 
-            var cliente = _context.Clientes.FirstOrDefault(c => c.NIT == loginRequest.NIT && c.Password == loginRequest.Password);
+            var cliente = _context.Clientes.FirstOrDefault(c =>
+                c.NIT == loginRequest.NIT && c.Password == loginRequest.Password
+            );
 
             if (cliente == null)
             {
@@ -54,7 +56,7 @@ namespace OrderBackend.Services
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(120),
+                expires: DateTime.UtcNow.AddMinutes(1), // Cambiado a UTC
                 signingCredentials: credentials
             );
 
