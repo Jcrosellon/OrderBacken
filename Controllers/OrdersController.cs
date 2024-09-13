@@ -21,7 +21,12 @@ namespace OrderBackend.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetOrders()
+        public IActionResult GetOrders(
+            int page = 1,
+            int pageSize = 4,
+            string? dateFilter = null,
+            string? searchTerm = null
+        )
         {
             var nit = User.Claims.FirstOrDefault(c => c.Type == "nit")?.Value;
             if (nit == null)
@@ -35,60 +40,40 @@ namespace OrderBackend.Controllers
                 return NotFound("Client not found.");
             }
 
-            var pedidos = _context.Pedidos.Where(p => p.ClienteId == cliente.Id).ToList();
+            IQueryable<Pedido> pedidosQuery = _context.Pedidos.Where(p =>
+                p.ClienteId == cliente.Id
+            );
+
+            // Filtrar por fecha
+            if (!string.IsNullOrEmpty(dateFilter))
+            {
+                var now = DateTime.UtcNow;
+                switch (dateFilter)
+                {
+                    case "last-3-months":
+                        pedidosQuery = pedidosQuery.Where(p => p.Date >= now.AddMonths(-3));
+                        break;
+                    case "last-6-months":
+                        pedidosQuery = pedidosQuery.Where(p => p.Date >= now.AddMonths(-6));
+                        break;
+                    case "last-12-months":
+                        pedidosQuery = pedidosQuery.Where(p => p.Date >= now.AddMonths(-12));
+                        break;
+                }
+            }
+
+            // Filtrar por número de pedido
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                if (int.TryParse(searchTerm, out int searchNumber))
+                {
+                    pedidosQuery = pedidosQuery.Where(p => p.Id == searchNumber);
+                }
+            }
+
+            var pedidos = pedidosQuery.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
             return Ok(pedidos);
         }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateOrderStatus(
-            int id,
-            [FromBody] UpdateOrderStatusRequest request
-        )
-        {
-            // Obtener el pedido por ID
-            var pedido = await _context.Pedidos.FindAsync(id);
-
-            if (pedido == null)
-            {
-                return NotFound("Order not found.");
-            }
-
-            // Actualizar el estado del pedido basado en la solicitud
-            pedido.Status = request.Status;
-            pedido.StatusDate = DateTime.UtcNow;
-
-            // Actualizar las fechas según el estado
-            switch (request.Status)
-            {
-                case "Pedido realizado":
-                    // No se actualizan las fechas para este estado
-                    break;
-                case "Estamos preparando tu pedido":
-                    pedido.PreparingDate = DateTime.UtcNow;
-                    pedido.ShippedDate = null;
-                    pedido.DeliveredDate = null;
-                    break;
-                case "Tu pedido fue despachado":
-                    pedido.ShippedDate = DateTime.UtcNow;
-                    pedido.DeliveredDate = null;
-                    break;
-                case "Tu pedido fue entregado":
-                    pedido.DeliveredDate = DateTime.UtcNow;
-                    break;
-                default:
-                    return BadRequest("Invalid status.");
-            }
-
-            // Guardar los cambios en la base de datos
-            await _context.SaveChangesAsync();
-
-            return Ok(pedido);
-        }
-    }
-
-    public class UpdateOrderStatusRequest
-    {
-        public string? Status { get; set; }
     }
 }
