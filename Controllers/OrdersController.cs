@@ -62,13 +62,10 @@ namespace OrderBackend.Controllers
                 }
             }
 
-            // Filtrar por número de pedido
+            // Filtrar por número de pedido o NIT (searchTerm)
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                if (int.TryParse(searchTerm, out int searchNumber))
-                {
-                    pedidosQuery = pedidosQuery.Where(p => p.Id == searchNumber);
-                }
+                pedidosQuery = pedidosQuery.Where(p => p.Id.ToString().Contains(searchTerm));
             }
 
             var pedidos = pedidosQuery.Skip((page - 1) * pageSize).Take(pageSize).ToList();
