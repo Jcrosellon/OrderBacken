@@ -21,7 +21,7 @@ namespace OrderBackend.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetOrders(
+        public async Task<IActionResult> GetOrders(
             int page = 1,
             int pageSize = 4,
             string? dateFilter = null,
@@ -34,7 +34,7 @@ namespace OrderBackend.Controllers
                 return Unauthorized("NIT not found in the token.");
             }
 
-            var cliente = _context.Clientes.FirstOrDefault(c => c.NIT == nit);
+            var cliente = await _context.Clientes.FirstOrDefaultAsync(c => c.NIT == nit);
             if (cliente == null)
             {
                 return NotFound("Client not found.");
@@ -48,6 +48,7 @@ namespace OrderBackend.Controllers
             if (!string.IsNullOrEmpty(dateFilter))
             {
                 var now = DateTime.UtcNow;
+
                 switch (dateFilter)
                 {
                     case "last-3-months":
@@ -68,8 +69,11 @@ namespace OrderBackend.Controllers
                 pedidosQuery = pedidosQuery.Where(p => p.Id.ToString().Contains(searchTerm));
             }
 
-            var pedidos = pedidosQuery.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-
+            var totalPedidos = await pedidosQuery.CountAsync();
+            var pedidos = await pedidosQuery
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
             return Ok(pedidos);
         }
     }
