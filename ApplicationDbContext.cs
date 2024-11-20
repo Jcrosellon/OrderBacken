@@ -1,5 +1,3 @@
-// Para asegurar que los modelos estén correctamente configurados.
-
 using Microsoft.EntityFrameworkCore;
 using OrderBackend.Models;
 
@@ -9,23 +7,24 @@ namespace OrderBackend.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        public DbSet<Cliente> Clientes { get; set; }
-        public DbSet<Pedido> Pedidos { get; set; }
+        public DbSet<Cliente> ClientesEstadosPedidosWeb { get; set; }
+        public DbSet<Pedido> ClientesEstadosPedidosWebDetalles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Configuración para la columna Total en la entidad Pedido
             modelBuilder.Entity<Pedido>()
-                .Property(p => p.ClienteId)
-                .HasColumnName("ClienteId"); // Nombre de la columna en la base de datos
+                .Property(p => p.Total)
+                .HasColumnType("decimal(18,2)"); // Ajusta la precisión y escala según sea necesario
 
+            // Configuración de la relación entre Pedido y Cliente
             modelBuilder.Entity<Pedido>()
                 .HasOne(p => p.Cliente)
-                .WithMany(c => c.Pedidos)
+                .WithMany(c => c.ClientesEstadosPedidosWebDetalles) // Actualiza aquí también
                 .HasForeignKey(p => p.ClienteId)
                 .HasConstraintName("FK_Pedidos_Clientes");
+            
+            base.OnModelCreating(modelBuilder);
         }
-
     }
-
 }
-

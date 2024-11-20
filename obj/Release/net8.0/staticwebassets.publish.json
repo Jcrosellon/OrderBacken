@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "bNsST3r5o5XFli+hIXOx08yr2PTa45nIWmFXoqkZWTc=",
+  "Source": "OrderBackend",
+  "BasePath": "_content/OrderBackend",
+  "Mode": "Default",
+  "ManifestType": "Publish",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

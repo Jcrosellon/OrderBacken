@@ -28,7 +28,8 @@ public class AuthController : ControllerBase
             return BadRequest("Invalid login request.");
         }
 
-        var user = _context.Clientes.FirstOrDefault(c => c.NIT == login.NIT && c.Password == login.Password);
+        var user = _context.ClientesEstadosPedidosWeb.FirstOrDefault(c => c.NIT == login.NIT && c.Password == login.Password);
+
         if (user == null)
         {
             return Unauthorized();

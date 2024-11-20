@@ -20,9 +20,10 @@ namespace OrderBackend.Services
 
         public async Task<Pedido?> GetPedidoByNITAsync(string nit)
         {
-            var pedido = await _context.Pedidos
-                .Include(p => p.Cliente)
-                .SingleOrDefaultAsync(p => p.Cliente!.NIT == nit);
+            var pedido = await _context.ClientesEstadosPedidosWebDetalles
+    .Include(p => p.Cliente)
+    .SingleOrDefaultAsync(p => p.Cliente!.NIT == nit);
+
 
             if (pedido == null)
             {

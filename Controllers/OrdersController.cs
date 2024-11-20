@@ -34,13 +34,15 @@ namespace OrderBackend.Controllers
                 return Unauthorized("NIT not found in the token.");
             }
 
-            var cliente = await _context.Clientes.FirstOrDefaultAsync(c => c.NIT == nit);
+            var cliente = await _context.ClientesEstadosPedidosWeb.FirstOrDefaultAsync(c =>
+                c.NIT == nit
+            );
             if (cliente == null)
             {
                 return NotFound("Client not found.");
             }
 
-            IQueryable<Pedido> pedidosQuery = _context.Pedidos.Where(p =>
+            IQueryable<Pedido> pedidosQuery = _context.ClientesEstadosPedidosWebDetalles.Where(p =>
                 p.ClienteId == cliente.Id
             );
 
@@ -48,19 +50,13 @@ namespace OrderBackend.Controllers
             if (!string.IsNullOrEmpty(dateFilter))
             {
                 var now = DateTime.UtcNow;
-
-                switch (dateFilter)
+                pedidosQuery = dateFilter switch
                 {
-                    case "last-3-months":
-                        pedidosQuery = pedidosQuery.Where(p => p.Date >= now.AddMonths(-3));
-                        break;
-                    case "last-6-months":
-                        pedidosQuery = pedidosQuery.Where(p => p.Date >= now.AddMonths(-6));
-                        break;
-                    case "last-12-months":
-                        pedidosQuery = pedidosQuery.Where(p => p.Date >= now.AddMonths(-12));
-                        break;
-                }
+                    "last-3-months" => pedidosQuery.Where(p => p.Date >= now.AddMonths(-3)),
+                    "last-6-months" => pedidosQuery.Where(p => p.Date >= now.AddMonths(-6)),
+                    "last-12-months" => pedidosQuery.Where(p => p.Date >= now.AddMonths(-12)),
+                    _ => pedidosQuery
+                };
             }
 
             // Filtrar por número de pedido o NIT (searchTerm)
@@ -71,10 +67,12 @@ namespace OrderBackend.Controllers
 
             var totalPedidos = await pedidosQuery.CountAsync();
             var pedidos = await pedidosQuery
+                .OrderBy(p => p.Date) // Asegurar el orden antes de aplicar paginación
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
-            return Ok(pedidos);
+
+            return Ok(new { Total = totalPedidos, Pedidos = pedidos });
         }
     }
 }

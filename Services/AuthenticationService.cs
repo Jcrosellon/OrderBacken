@@ -28,7 +28,7 @@ namespace OrderBackend.Services
                 throw new ArgumentNullException(nameof(loginRequest));
             }
 
-            var cliente = _context.Clientes.FirstOrDefault(c =>
+            var cliente = _context.ClientesEstadosPedidosWeb.FirstOrDefault(c => // Cambiado aquí
                 c.NIT == loginRequest.NIT && c.Password == loginRequest.Password
             );
 

@@ -21,7 +21,7 @@ public class Program
                 policy =>
                 {
                     policy
-                        .WithOrigins("http://localhost:4200")
+                        .WithOrigins("https://192.168.0.119:4415")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();

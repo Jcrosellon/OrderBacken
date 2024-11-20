@@ -7,7 +7,7 @@ namespace OrderBackend.Models
         public int Id { get; set; }
         public string? NIT { get; set; }
         public string? Password { get; set; }
-        public ICollection<Pedido> Pedidos { get; set; } = new List<Pedido>(); // Inicialización para evitar null
+        public ICollection<Pedido> ClientesEstadosPedidosWebDetalles { get; set; } =
+            new List<Pedido>();
     }
-
 }
