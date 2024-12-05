@@ -144,3 +144,4 @@
 /Users/mariapaz/OrderBackend/obj/Release/net8.0/OrderBackend.pdb
 /Users/mariapaz/OrderBackend/obj/Release/net8.0/OrderBackend.genruntimeconfig.cache
 /Users/mariapaz/OrderBackend/obj/Release/net8.0/ref/OrderBackend.dll
+/Users/mariapaz/OrderBackend/bin/Release/net8.0/web.config

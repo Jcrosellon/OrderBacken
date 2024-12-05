@@ -17,11 +17,15 @@ public class Program
         builder.Services.AddCors(options =>
         {
             options.AddPolicy(
-                "AllowAngularApp",
+                "AllowSpecificOrigin",
                 policy =>
                 {
                     policy
-                        .WithOrigins("https://192.168.0.119:4415")
+                        .WithOrigins(
+                            "http://localhost:4200"
+                        //"https://estadopedidosbaq.logisticaferretera.com.co",
+                        //"http://estadopedidos.logisticaferretera.com.co"
+                        )
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();
@@ -78,10 +82,10 @@ public class Program
         }
 
         app.UseHttpsRedirection();
-        app.UseRouting(); // Ensure this is before app.UseAuthorization()
-        app.UseAuthentication(); // Ensure this is before app.UseAuthorization()
-        app.UseAuthorization(); // This must be between app.UseRouting() and app.UseEndpoints()
-        app.UseCors("AllowAngularApp");
+        app.UseRouting(); // Debe estar antes de CORS y autenticación
+        app.UseCors("AllowSpecificOrigin"); // CORS debe ir antes de Authentication y Authorization
+        app.UseAuthentication(); // Autenticación antes de Authorization
+        app.UseAuthorization();
 
         app.MapHub<OrderHub>("/orderHub");
         app.MapControllers();
