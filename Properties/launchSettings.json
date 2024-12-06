@@ -10,7 +10,7 @@
     "OrderBackend": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:5001", //"https://Apis-estadopedidos.logisticaferretera.com.co", // "https://localhost:5001",
+      "applicationUrl": "https://localhost:5001",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
       }

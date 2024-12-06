@@ -67,7 +67,7 @@ namespace OrderBackend.Controllers
 
             var totalPedidos = await pedidosQuery.CountAsync();
             var pedidos = await pedidosQuery
-                .OrderBy(p => p.Date) // Asegurar el orden antes de aplicar paginación
+                .OrderByDescending(p => p.Date) // Ordenar por fecha descendente
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();

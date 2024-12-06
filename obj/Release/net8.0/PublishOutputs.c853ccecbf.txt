@@ -1,5 +1,4 @@
 /Users/mariapaz/OrderBackend/publish/OrderBackend
-/Users/mariapaz/OrderBackend/publish/web.config
 /Users/mariapaz/OrderBackend/publish/appsettings.Development.json
 /Users/mariapaz/OrderBackend/publish/appsettings.json
 /Users/mariapaz/OrderBackend/publish/OrderBackend.dll
