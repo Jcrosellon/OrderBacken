@@ -20,10 +20,9 @@ namespace OrderBackend.Services
 
         public async Task<Pedido?> GetPedidoByNITAsync(string nit)
         {
-            var pedido = await _context.ClientesEstadosPedidosWebDetalles
-    .Include(p => p.Cliente)
-    .SingleOrDefaultAsync(p => p.Cliente!.NIT == nit);
-
+            var pedido = await _context
+                .ClientesEstadosPedidosWebDetalles.Include(p => p.Cliente)
+                .SingleOrDefaultAsync(p => p.Cliente!.NIT == nit);
 
             if (pedido == null)
             {
@@ -37,9 +36,11 @@ namespace OrderBackend.Services
         {
             public PedidoNotFoundException() { }
 
-            public PedidoNotFoundException(string? message) : base(message) { }
+            public PedidoNotFoundException(string? message)
+                : base(message) { }
 
-            public PedidoNotFoundException(string? message, Exception? innerException) : base(message, innerException) { }
+            public PedidoNotFoundException(string? message, Exception? innerException)
+                : base(message, innerException) { }
         }
     }
 }

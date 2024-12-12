@@ -56,7 +56,7 @@ namespace OrderBackend.Services
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(1), // Cambiado a UTC
+                expires: DateTime.UtcNow.AddMinutes(10), // Cambiado a UTC
                 signingCredentials: credentials
             );
 

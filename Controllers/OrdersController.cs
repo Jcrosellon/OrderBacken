@@ -28,12 +28,14 @@ namespace OrderBackend.Controllers
             string? searchTerm = null
         )
         {
+            // Obtener el NIT del token
             var nit = User.Claims.FirstOrDefault(c => c.Type == "nit")?.Value;
             if (nit == null)
             {
                 return Unauthorized("NIT not found in the token.");
             }
 
+            // Validar si el cliente existe
             var cliente = await _context.ClientesEstadosPedidosWeb.FirstOrDefaultAsync(c =>
                 c.NIT == nit
             );
@@ -59,12 +61,24 @@ namespace OrderBackend.Controllers
                 };
             }
 
-            // Filtrar por número de pedido o NIT (searchTerm)
+            // Filtrar por número de pedido solo si el término tiene 6 dígitos
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                pedidosQuery = pedidosQuery.Where(p => p.Id.ToString().Contains(searchTerm));
+                searchTerm = searchTerm.Trim();
+
+                if (searchTerm.Length == 6 && int.TryParse(searchTerm, out int searchId))
+                {
+                    pedidosQuery = pedidosQuery.Where(p => p.Id == searchId);
+                }
+                else
+                {
+                    return BadRequest(
+                        "El número de pedido debe tener exactamente 6 dígitos numéricos."
+                    );
+                }
             }
 
+            // Obtener total y los pedidos paginados
             var totalPedidos = await pedidosQuery.CountAsync();
             var pedidos = await pedidosQuery
                 .OrderByDescending(p => p.Date) // Ordenar por fecha descendente

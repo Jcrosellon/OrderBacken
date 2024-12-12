@@ -144,9 +144,3 @@
 /Users/mariapaz/OrderBackend/obj/Debug/net8.0/OrderBackend.pdb
 /Users/mariapaz/OrderBackend/obj/Debug/net8.0/OrderBackend.genruntimeconfig.cache
 /Users/mariapaz/OrderBackend/obj/Debug/net8.0/ref/OrderBackend.dll
-/Users/mariapaz/OrderBackend/bin/Debug/net8.0/publish/web.config
-/Users/mariapaz/OrderBackend/bin/Debug/net8.0/publish/appsettings.Development.json
-/Users/mariapaz/OrderBackend/bin/Debug/net8.0/publish/appsettings.json
-/Users/mariapaz/OrderBackend/bin/Debug/net8.0/publish/OrderBackend.deps.json
-/Users/mariapaz/OrderBackend/bin/Debug/net8.0/publish/OrderBackend.runtimeconfig.json
-/Users/mariapaz/OrderBackend/bin/Debug/net8.0/web.config

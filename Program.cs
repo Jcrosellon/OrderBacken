@@ -21,7 +21,7 @@ public class Program
                 policy =>
                 {
                     policy
-                        .WithOrigins("http://localhost:4200") //"https://estadopedidos.logisticaferretera.com.co")
+                        .WithOrigins("https://estadopedidos.logisticaferretera.com.co") //"http://localhost:4200") //
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();
