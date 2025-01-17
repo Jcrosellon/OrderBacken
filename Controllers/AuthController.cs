@@ -1,11 +1,11 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
-using OrderBackend.Models;
-using OrderBackend.Data;
 using System.Text;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using OrderBackend.Data;
+using OrderBackend.Models;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -23,12 +23,19 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public IActionResult Login([FromBody] UserLogin login)
     {
-        if (login == null || string.IsNullOrEmpty(login.NIT) || string.IsNullOrEmpty(login.Password))
+        if (
+            login == null
+            || string.IsNullOrEmpty(login.NIT)
+            || string.IsNullOrEmpty(login.Password)
+        )
         {
             return BadRequest("Invalid login request.");
         }
 
-        var user = _context.Clientes.FirstOrDefault(c => c.NIT == login.NIT && c.Password == login.Password);
+        var user = _context.ClientesEstadosPedidosWeb.FirstOrDefault(c =>
+            c.NIT == login.NIT && c.Password == login.Password
+        );
+
         if (user == null)
         {
             return Unauthorized();
@@ -51,16 +58,21 @@ public class AuthController : ControllerBase
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
-        var key = _configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT key is not configured.");
+        var key =
+            _configuration["Jwt:Key"]
+            ?? throw new InvalidOperationException("JWT key is not configured.");
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
         var creds = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            _configuration["Jwt:Issuer"] ?? throw new InvalidOperationException("JWT issuer is not configured."),
-            _configuration["Jwt:Audience"] ?? throw new InvalidOperationException("JWT audience is not configured."),
+            _configuration["Jwt:Issuer"]
+                ?? throw new InvalidOperationException("JWT issuer is not configured."),
+            _configuration["Jwt:Audience"]
+                ?? throw new InvalidOperationException("JWT audience is not configured."),
             claims,
             expires: DateTime.Now.AddMinutes(30),
-            signingCredentials: creds);
+            signingCredentials: creds
+        );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }

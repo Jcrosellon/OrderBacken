@@ -6,4 +6,3 @@ namespace OrderBackend.Models
         public string? Password { get; set; }
     }
 }
-

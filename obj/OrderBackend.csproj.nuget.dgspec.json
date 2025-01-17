@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/mariapaz/OrderBackend/OrderBackend.csproj": {}
+    "/Users/joserosellon/proyectos/OrderBacken/OrderBackend.csproj": {}
   },
   "projects": {
-    "/Users/mariapaz/OrderBackend/OrderBackend.csproj": {
+    "/Users/joserosellon/proyectos/OrderBacken/OrderBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mariapaz/OrderBackend/OrderBackend.csproj",
+        "projectUniqueName": "/Users/joserosellon/proyectos/OrderBacken/OrderBackend.csproj",
         "projectName": "OrderBackend",
-        "projectPath": "/Users/mariapaz/OrderBackend/OrderBackend.csproj",
-        "packagesPath": "/Users/mariapaz/.nuget/packages/",
-        "outputPath": "/Users/mariapaz/OrderBackend/obj/",
+        "projectPath": "/Users/joserosellon/proyectos/OrderBacken/OrderBackend.csproj",
+        "packagesPath": "/Users/joserosellon/.nuget/packages/",
+        "outputPath": "/Users/joserosellon/proyectos/OrderBacken/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mariapaz/.nuget/NuGet/NuGet.Config"
+          "/Users/joserosellon/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -101,7 +101,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.303/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.404/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

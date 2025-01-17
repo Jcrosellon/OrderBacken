@@ -21,74 +21,72 @@ namespace OrderBackend.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetOrders()
+        public async Task<IActionResult> GetOrders(
+            int page = 1,
+            int pageSize = 4,
+            string? dateFilter = null,
+            string? searchTerm = null
+        )
         {
+            // Obtener el NIT del token
             var nit = User.Claims.FirstOrDefault(c => c.Type == "nit")?.Value;
             if (nit == null)
             {
-                return Unauthorized("NIT not found in the token.");
+                return Unauthorized("NIT not found in the token");
             }
 
-            var cliente = _context.Clientes.FirstOrDefault(c => c.NIT == nit);
+            // Validar si el cliente existe
+            var cliente = await _context.ClientesEstadosPedidosWeb.FirstOrDefaultAsync(c =>
+                c.NIT == nit
+            );
             if (cliente == null)
             {
                 return NotFound("Client not found.");
             }
 
-            var pedidos = _context.Pedidos.Where(p => p.ClienteId == cliente.Id).ToList();
+            IQueryable<Pedido> pedidosQuery = _context.ClientesEstadosPedidosWebDetalles.Where(P =>
+                P.ClienteId == cliente.Id
+            );
 
-            return Ok(pedidos);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateOrderStatus(
-            int id,
-            [FromBody] UpdateOrderStatusRequest request
-        )
-        {
-            // Obtener el pedido por ID
-            var pedido = await _context.Pedidos.FindAsync(id);
-
-            if (pedido == null)
+            // Filtrar por fecha
+            if (!string.IsNullOrEmpty(dateFilter))
             {
-                return NotFound("Order not found.");
+                var now = DateTime.UtcNow;
+                pedidosQuery = dateFilter switch
+                {
+                    "last-3-months" => pedidosQuery.Where(p => p.Date >= now.AddMonths(-3)),
+                    "last-6-months" => pedidosQuery.Where(p => p.Date >= now.AddMonths(-6)),
+                    "last-12-months" => pedidosQuery.Where(p => p.Date >= now.AddMonths(-12)),
+                    _ => pedidosQuery
+                };
             }
 
-            // Actualizar el estado del pedido basado en la solicitud
-            pedido.Status = request.Status;
-            pedido.StatusDate = DateTime.UtcNow;
-
-            // Actualizar las fechas según el estado
-            switch (request.Status)
+            // Filtrar por número de pedido solo si el termino tiene 6 dijitos
+            if (!string.IsNullOrEmpty(searchTerm))
             {
-                case "Pedido realizado":
-                    // No se actualizan las fechas para este estado
-                    break;
-                case "Estamos preparando tu pedido":
-                    pedido.PreparingDate = DateTime.UtcNow;
-                    pedido.ShippedDate = null;
-                    pedido.DeliveredDate = null;
-                    break;
-                case "Tu pedido fue despachado":
-                    pedido.ShippedDate = DateTime.UtcNow;
-                    pedido.DeliveredDate = null;
-                    break;
-                case "Tu pedido fue entregado":
-                    pedido.DeliveredDate = DateTime.UtcNow;
-                    break;
-                default:
-                    return BadRequest("Invalid status.");
+                searchTerm = searchTerm.Trim();
+
+                if (searchTerm.Length == 6 && int.TryParse(searchTerm, out int searchId))
+                {
+                    pedidosQuery = pedidosQuery.Where(p => p.Id == searchId);
+                }
+                else
+                {
+                    return BadRequest(
+                        "El número de pedido debe tener exactamente 6 dijistos numericos"
+                    );
+                }
             }
 
-            // Guardar los cambios en la base de datos
-            await _context.SaveChangesAsync();
+            // Obtener total y los pedidos paginados
+            var totalPedidos = await pedidosQuery.CountAsync();
+            var pedidos = await pedidosQuery
+                .OrderByDescending(p => p.Date)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
-            return Ok(pedido);
+            return Ok(new { Total = totalPedidos, Pedidos = pedidos });
         }
-    }
-
-    public class UpdateOrderStatusRequest
-    {
-        public string? Status { get; set; }
     }
 }
