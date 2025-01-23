@@ -290,3 +290,8 @@
 /Users/joserosellon/proyectos/OrderBacken/obj/Debug/net8.0/OrderBackend.pdb
 /Users/joserosellon/proyectos/OrderBacken/obj/Debug/net8.0/OrderBackend.genruntimeconfig.cache
 /Users/joserosellon/proyectos/OrderBacken/obj/Debug/net8.0/ref/OrderBackend.dll
+/Users/joserosellon/proyectos/OrderBacken/bin/Debug/net8.0/publish/web.config
+/Users/joserosellon/proyectos/OrderBacken/bin/Debug/net8.0/publish/appsettings.Development.json
+/Users/joserosellon/proyectos/OrderBacken/bin/Debug/net8.0/publish/appsettings.json
+/Users/joserosellon/proyectos/OrderBacken/bin/Debug/net8.0/publish/OrderBackend.deps.json
+/Users/joserosellon/proyectos/OrderBacken/bin/Debug/net8.0/publish/OrderBackend.runtimeconfig.json

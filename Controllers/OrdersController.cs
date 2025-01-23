@@ -25,7 +25,8 @@ namespace OrderBackend.Controllers
             int page = 1,
             int pageSize = 4,
             string? dateFilter = null,
-            string? searchTerm = null
+            string? searchTerm = null,
+            int? orderId = null // Parámetro explícito para buscar por número de pedido
         )
         {
             // Obtener el NIT del token
@@ -44,8 +45,28 @@ namespace OrderBackend.Controllers
                 return NotFound("Client not found.");
             }
 
-            IQueryable<Pedido> pedidosQuery = _context.ClientesEstadosPedidosWebDetalles.Where(P =>
-                P.ClienteId == cliente.Id
+            IQueryable<Pedido> pedidosQuery;
+
+            // Si se proporciona un orderId, buscar únicamente ese pedido
+            if (orderId.HasValue)
+            {
+                pedidosQuery = _context.ClientesEstadosPedidosWebDetalles.Where(p =>
+                    p.Id == orderId && p.ClienteId == cliente.Id
+                );
+
+                var pedido = await pedidosQuery.SingleOrDefaultAsync();
+
+                if (pedido == null)
+                {
+                    return NotFound($"Order with ID {orderId} not found.");
+                }
+
+                return Ok(new { Total = 1, Pedidos = new List<Pedido> { pedido } });
+            }
+
+            // Construir la consulta base para el cliente
+            pedidosQuery = _context.ClientesEstadosPedidosWebDetalles.Where(p =>
+                p.ClienteId == cliente.Id
             );
 
             // Filtrar por fecha
@@ -61,20 +82,14 @@ namespace OrderBackend.Controllers
                 };
             }
 
-            // Filtrar por número de pedido solo si el termino tiene 6 dijitos
+            // Filtrar por término de búsqueda
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 searchTerm = searchTerm.Trim();
 
-                if (searchTerm.Length == 6 && int.TryParse(searchTerm, out int searchId))
+                if (searchTerm.Length >= 4 && int.TryParse(searchTerm, out int searchId))
                 {
-                    pedidosQuery = pedidosQuery.Where(p => p.Id == searchId);
-                }
-                else
-                {
-                    return BadRequest(
-                        "El número de pedido debe tener exactamente 6 dijistos numericos"
-                    );
+                    pedidosQuery = pedidosQuery.Where(p => p.Id.ToString().Contains(searchTerm));
                 }
             }
 

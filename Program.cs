@@ -21,7 +21,10 @@ public class Program
                 policy =>
                 {
                     policy
-                        .WithOrigins("http://localhost:4200")
+                        .WithOrigins(
+                            "http://localhost:4200",
+                            "https://estadopedidos.logisticaferretera.com.co"
+                        )
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();
@@ -79,10 +82,9 @@ public class Program
 
         app.UseHttpsRedirection();
         app.UseRouting(); // Ensure this is before app.UseAuthorization()
+        app.UseCors("AllowAngularApp");
         app.UseAuthentication(); // Ensure this is before app.UseAuthorization()
         app.UseAuthorization(); // This must be between app.UseRouting() and app.UseEndpoints()
-        app.UseCors("AllowAngularApp");
-
         app.MapHub<OrderHub>("/orderHub");
         app.MapControllers();
 
