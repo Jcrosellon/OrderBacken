@@ -13,7 +13,6 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Configure services
         builder.Services.AddCors(options =>
         {
             options.AddPolicy(
@@ -21,10 +20,7 @@ public class Program
                 policy =>
                 {
                     policy
-                        .WithOrigins(
-                            "http://localhost:4200",
-                            "https://estadopedidos.logisticaferretera.com.co"
-                        )
+                        .WithOrigins("https://lfbaq-estadopedidos.logisticaferretera.com.co")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();

@@ -124,8 +124,6 @@
 /Users/joserosellon/proyectos/OrderBacken/bin/Release/net8.0/runtimes/win/lib/net6.0/System.Windows.Extensions.dll
 /Users/joserosellon/proyectos/OrderBacken/obj/Release/net8.0/OrderBackend.csproj.AssemblyReference.cache
 /Users/joserosellon/proyectos/OrderBacken/obj/Release/net8.0/OrderBackend.GeneratedMSBuildEditorConfig.editorconfig
-/Users/joserosellon/proyectos/OrderBacken/obj/Release/net8.0/OrderBackend.AssemblyInfoInputs.cache
-/Users/joserosellon/proyectos/OrderBacken/obj/Release/net8.0/OrderBackend.AssemblyInfo.cs
 /Users/joserosellon/proyectos/OrderBacken/obj/Release/net8.0/OrderBackend.csproj.CoreCompileInputs.cache
 /Users/joserosellon/proyectos/OrderBacken/obj/Release/net8.0/OrderBackend.MvcApplicationPartsAssemblyInfo.cs
 /Users/joserosellon/proyectos/OrderBacken/obj/Release/net8.0/OrderBackend.MvcApplicationPartsAssemblyInfo.cache
